@@ -1,17 +1,30 @@
-PUT http://localhost/Restful_API/backend/route/adminRoute.php?cni=CNI457
-Content-Type: application/json;
+### Get all filieres
+GET http://localhost/restful_API/backend/route/filiereRoute.php
+
+### Get filiere by ID
+GET http://localhost/restful_API/backend/route/filiereRoute.php?id=1
+
+### Create new filiere
+POST http://localhost/restful_API/backend/route/filiereRoute.php
+Content-Type: application/json
 
 {
-    "id_admin": "100",
-    "CNI": "CNI457",
-    "nom": "chiboub",
-    "prenom": "AHmed",
-    "email": "sarsa.benni@univ.ma",
-    "tele": "06234567890",
-    "date_naissance": "1999-02-14",
-    "lieu_naissance": "F\u00e8s",
-    "sexe": "f\u00e9minin",
-    "ville": "Taza",
-    "pays": "Maroc",
-    "date_debut_travail": "2024-03-20"
+    "nom_filiere": "Génie Informatique",
+    "id_chef_filiere": "2",
+    "id_dep": "1",
+    "niveau": "Master"
 }
+
+### Update filiere
+PUT http://localhost/restful_API/backend/route/filiereRoute.php?id=1
+Content-Type: application/json
+
+{
+    "nom_filiere": "Génie Logiciel",
+    "id_chef_filiere": "2",
+    "id_dep": "1",
+    "niveau": "Licence"
+}
+
+### Delete filiere
+DELETE http://localhost/restful_API/backend/route/filiereRoute.php?id=1

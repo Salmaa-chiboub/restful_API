@@ -5,22 +5,43 @@ function getAllAdmins() {
     $conn = getConnection();
     $query = "SELECT * FROM admin";
     $result = mysqli_query($conn, $query);
-    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $admins = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_close($conn);
+    return $admins;
 }
 
 function getAdminByCNI($cni) {
     $conn = getConnection();
+    $cni = mysqli_real_escape_string($conn, $cni);
     $query = "SELECT * FROM admin WHERE CNI = ?";
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "s", $cni);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
-    return mysqli_fetch_assoc($result);
+    $admin = mysqli_fetch_assoc($result);
+    mysqli_close($conn);
+    return $admin;
 }
 
 function createAdmin($data) {
     $conn = getConnection();
-    $query = "INSERT INTO admin (CNI, nom, prenom, email, tele, date_naissance, lieu_naissance, sexe, ville, pays, date_debut_travail) 
+    
+    // Validate required fields
+    $required_fields = ['CNI', 'nom', 'prenom', 'email', 'tele', 'date_naissance', 
+                       'lieu_naissance', 'sexe', 'ville', 'pays', 'date_debut_travail'];
+    foreach ($required_fields as $field) {
+        if (!isset($data[$field]) || empty($data[$field])) {
+            return false;
+        }
+    }
+
+    // Sanitize inputs
+    foreach ($data as $key => $value) {
+        $data[$key] = mysqli_real_escape_string($conn, $value);
+    }
+
+    $query = "INSERT INTO admin (CNI, nom, prenom, email, tele, date_naissance, 
+              lieu_naissance, sexe, ville, pays, date_debut_travail) 
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "sssssssssss", 
@@ -28,11 +49,25 @@ function createAdmin($data) {
         $data['date_naissance'], $data['lieu_naissance'], $data['sexe'], $data['ville'], 
         $data['pays'], $data['date_debut_travail']
     );
-    return mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_execute($stmt);
+    mysqli_close($conn);
+    return $result;
 }
 
 function updateAdmin($cni, $data) {
     $conn = getConnection();
+    
+    // Validate CNI
+    if (empty($cni)) {
+        return false;
+    }
+
+    // Sanitize inputs
+    $cni = mysqli_real_escape_string($conn, $cni);
+    foreach ($data as $key => $value) {
+        $data[$key] = mysqli_real_escape_string($conn, $value);
+    }
+
     $query = "UPDATE admin SET nom=?, prenom=?, email=?, tele=?, date_naissance=?, 
               lieu_naissance=?, sexe=?, ville=?, pays=?, date_debut_travail=?
               WHERE CNI=?";
@@ -42,14 +77,25 @@ function updateAdmin($cni, $data) {
         $data['lieu_naissance'], $data['sexe'], $data['ville'], $data['pays'], 
         $data['date_debut_travail'], $cni
     );
-    return mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_execute($stmt);
+    mysqli_close($conn);
+    return $result;
 }
 
 function deleteAdmin($cni) {
     $conn = getConnection();
+    
+    // Validate CNI
+    if (empty($cni)) {
+        return false;
+    }
+
+    $cni = mysqli_real_escape_string($conn, $cni);
     $query = "DELETE FROM admin WHERE CNI=?";
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "s", $cni);
-    return mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_execute($stmt);
+    mysqli_close($conn);
+    return $result;
 }
 ?>
