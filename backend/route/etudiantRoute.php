@@ -1,14 +1,18 @@
-<?php // Inclure le fichier contrôleur
+<?php
 require_once "../controller/etudiantController.php";
 
-// Récupérer la méthode HTTP
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+header('Access-Control-Allow-Headers: Content-Type');
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Utiliser un switch pour traiter les différentes méthodes HTTP
 switch ($method) {
     case 'GET':
         // Vérifier si un CNE est passé dans l'URL
-        if (isset($_GET['cne'])) {
+         if (isset($_GET['cne'])) {
             // Route pour obtenir un étudiant par son CNE
             getEtudiantByCNEAPI($_GET['cne']);
         } else {

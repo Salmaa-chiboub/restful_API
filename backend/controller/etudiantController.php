@@ -26,6 +26,8 @@ function getEtudiantByCNEAPI($cne) {
     jsonResponse(['data' => $etudiant], 200);
 }
 
+
+
 // Créer un nouvel étudiant 
 function createEtudiantAPI() {
     // Récupérer les données POST au format JSON
