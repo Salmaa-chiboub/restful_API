@@ -114,7 +114,6 @@ addStudentForm.addEventListener('submit', async (e) => {
     const formData = new FormData(addStudentForm);
     const studentData = Object.fromEntries(formData.entries());
     
-<<<<<<< HEAD
     try {
         const cne = studentData.CNE;
         const method = document.querySelector('#addStudentModal .modal-title').textContent === 'Edit Student' ? 'PUT' : 'POST';
@@ -138,41 +137,6 @@ addStudentForm.addEventListener('submit', async (e) => {
         if (!response.ok || result.error) {
             throw new Error(result.error || 'Failed to save student');
         }
-=======
-    // Ensure all required fields are present
-    const requiredFields = ['CNE', 'nom', 'prenom', 'email', 'tele', 'sexe', 'pays', 'ville', 
-                          'date_naissance', 'lieu_naissance', 'coordonne_parental', 'date_inscription'];
-    
-    for (const field of requiredFields) {
-        if (!studentData[field]) {
-            showAlert(`Please fill in the ${field} field`, 'danger');
-            return;
-        }
-    }
-
-    // Ensure filiere is set as id_filiere
-    if (!studentData.filiere) {
-        showAlert('Please select a field of study', 'danger');
-        return;
-    }
-    studentData.id_filiere = studentData.filiere;
-    delete studentData.filiere;
-
-    try {
-        const method = studentData.id_etudiant ? 'PUT' : 'POST';
-        const url = '../../route/etudiantRoute.php' + (studentData.id_etudiant ? `?id=${studentData.id_etudiant}` : '');
-
-        const response = await fetch(url, {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(studentData)
-        });
-
-        if (!response.ok) throw new Error('Failed to save student');
-
-        const result = await response.json();
-        if (result.error) throw new Error(result.error);
->>>>>>> d8add285a37677a8522fca41cad708cacbf43086
 
         // Close modal and reload data
         bootstrap.Modal.getInstance(document.getElementById('addStudentModal')).hide();
@@ -181,11 +145,10 @@ addStudentForm.addEventListener('submit', async (e) => {
         showAlert('Student saved successfully', 'success');
     } catch (error) {
         console.error('Error saving student:', error);
-<<<<<<< HEAD
         showAlert(`Error saving student: ${error.message}`, 'danger');
-=======
+
         showAlert('Error saving student data', 'danger');
->>>>>>> d8add285a37677a8522fca41cad708cacbf43086
+
     }
 });
 
